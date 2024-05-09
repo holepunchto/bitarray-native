@@ -1,0 +1,4 @@
+[submodule "vendor/libbitarray"]
+	path = vendor/libbitarray
+	url = ../../holepunchto/libbitarray.git
+	shallow = true

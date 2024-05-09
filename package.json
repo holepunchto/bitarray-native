@@ -1,0 +1,43 @@
+{
+  "name": "bitarray-native",
+  "version": "1.0.0",
+  "description": "libbitarray bindings for JavaScript",
+  "exports": {
+    ".": "./index.js",
+    "./package": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "binding.c",
+    "binding.js",
+    "binding.gyp",
+    "CMakeLists.txt",
+    "prebuilds",
+    "vendor/libbitarray"
+  ],
+  "addon": true,
+  "scripts": {
+    "test": "standard && brittle test.js",
+    "prebuild": "prebuildify",
+    "install": "node-gyp-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bitarray-native.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bitarray-native/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bitarray-native#readme",
+  "dependencies": {
+    "napi-macros": "^2.0.0",
+    "node-gyp-build": "^4.2.3"
+  },
+  "devDependencies": {
+    "brittle": "^3.1.0",
+    "prebuildify": "^6.0.0",
+    "standard": "^17.0.0"
+  }
+}
