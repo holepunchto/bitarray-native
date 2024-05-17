@@ -2,7 +2,7 @@
   'targets': [{
     'target_name': 'bitarray',
     'include_dirs': [
-      '<!(node -e "require(\'napi-macros\')")',
+      '<!(bare-dev paths compat/napi)',
     ],
     'dependencies': [
       './vendor/libbitarray/libbitarray.gyp:libbitarray',
