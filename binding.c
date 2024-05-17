@@ -219,6 +219,136 @@ bitarray_native_set (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 4;
+  js_value_t *argv[4];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 4);
+
+  bitarray_native_t *bitarray;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
+  assert(err == 0);
+
+  bool value;
+  err = js_get_value_bool(env, argv[1], &value);
+  assert(err == 0);
+
+  int64_t start;
+  err = js_get_value_int64(env, argv[2], &start);
+  assert(err == 0);
+
+  int64_t end;
+  err = js_get_value_int64(env, argv[3], &end);
+  assert(err == 0);
+
+  bitarray_fill(&bitarray->handle, value, start, end);
+
+  return NULL;
+}
+
+static js_value_t *
+bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 3;
+  js_value_t *argv[3];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 3);
+
+  bitarray_native_t *bitarray;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
+  assert(err == 0);
+
+  bool value;
+  err = js_get_value_bool(env, argv[1], &value);
+  assert(err == 0);
+
+  int64_t pos;
+  err = js_get_value_int64(env, argv[2], &pos);
+  assert(err == 0);
+
+  js_value_t *result;
+  err = js_create_int64(env, bitarray_find_first(&bitarray->handle, value, pos), &result);
+  assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
+bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 3;
+  js_value_t *argv[3];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 3);
+
+  bitarray_native_t *bitarray;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
+  assert(err == 0);
+
+  bool value;
+  err = js_get_value_bool(env, argv[1], &value);
+  assert(err == 0);
+
+  int64_t pos;
+  err = js_get_value_int64(env, argv[2], &pos);
+  assert(err == 0);
+
+  js_value_t *result;
+  err = js_create_int64(env, bitarray_find_last(&bitarray->handle, value, pos), &result);
+  assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
+bitarray_native_count (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 4;
+  js_value_t *argv[4];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 4);
+
+  bitarray_native_t *bitarray;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
+  assert(err == 0);
+
+  bool value;
+  err = js_get_value_bool(env, argv[1], &value);
+  assert(err == 0);
+
+  int64_t start;
+  err = js_get_value_int64(env, argv[2], &start);
+  assert(err == 0);
+
+  int64_t end;
+  err = js_get_value_int64(env, argv[3], &end);
+  assert(err == 0);
+
+  js_value_t *result;
+  err = js_create_int64(env, bitarray_count(&bitarray->handle, value, start, end), &result);
+  assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
 bitarray_native_exports (js_env_t *env, js_value_t *exports) {
   int err;
 
@@ -235,6 +365,10 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
   V("destroy", bitarray_native_destroy)
   V("get", bitarray_native_get)
   V("set", bitarray_native_set)
+  V("fill", bitarray_native_fill)
+  V("findFirst", bitarray_native_find_first)
+  V("findLast", bitarray_native_find_last)
+  V("count", bitarray_native_count)
 #undef V
 
   return exports;

@@ -31,6 +31,22 @@ module.exports = class Bitarray {
     return binding.set(this._handle, bit, value)
   }
 
+  fill (value, start, end) {
+    binding.fill(this._handle, value, start, end)
+  }
+
+  findFirst (value, pos = 0) {
+    return binding.findFirst(this._handle, value, pos)
+  }
+
+  findLast (value, pos = -1) {
+    return binding.findLast(this._handle, value, pos)
+  }
+
+  count (value, start, end) {
+    return binding.count(this._handle, value, start, end)
+  }
+
   destroy () {
     if (this._handle === null) return
 
