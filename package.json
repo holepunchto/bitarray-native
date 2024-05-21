@@ -10,15 +10,13 @@
     "index.js",
     "binding.c",
     "binding.js",
-    "binding.gyp",
     "CMakeLists.txt",
     "prebuilds",
     "vendor/libbitarray"
   ],
   "addon": true,
   "scripts": {
-    "test": "standard && brittle test.js",
-    "install": "node-gyp-build"
+    "test": "standard && bare test.js && node test.js"
   },
   "repository": {
     "type": "git",
@@ -31,11 +29,10 @@
   },
   "homepage": "https://github.com/holepunchto/bitarray-native#readme",
   "dependencies": {
-    "node-gyp-build": "^4.2.3"
+    "load-addon": "^1.0.0"
   },
   "devDependencies": {
     "brittle": "^3.1.0",
-    "prebuildify": "^6.0.0",
     "standard": "^17.0.0"
   }
 }
