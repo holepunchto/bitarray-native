@@ -171,14 +171,6 @@ module.exports = exports = class Bitarray {
   countUnset (start, end) {
     return this.count(false, start, end)
   }
-
-  destroy () {
-    if (this._handle === null) return
-
-    binding.destroy(this._handle)
-
-    this._handle = null
-  }
 }
 
 exports.constants = {
