@@ -182,7 +182,7 @@ bitarray_native_page (js_env_t *env, js_callback_info_t *info) {
 
   bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
 
-  uint32_t id = -1;
+  int64_t id = -1;
 
   if (page) {
     bitarray_native_allocation_t *allocation = (bitarray_native_allocation_t *) (((char *) page) - sizeof(bitarray_native_allocation_t));
@@ -488,6 +488,8 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
     err = js_set_named_property(env, constants, name, val); \
     assert(err == 0); \
   }
+
+  V("BYTES_PER_PAGE", BITARRAY_BYTES_PER_PAGE)
 
   V("PAGE_BITFIELD_OFFSET", offsetof(bitarray_page_t, bitfield))
 #undef V

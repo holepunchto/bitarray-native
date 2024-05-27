@@ -1,9 +1,14 @@
 const binding = require('./binding')
 
+exports.constants = {
+  BYTES_PER_PAGE: binding.constants.BYTES_PER_PAGE
+}
+
 module.exports = class Bitarray {
   constructor () {
     this._allocations = []
     this._handle = binding.init(this, this._onalloc, this._onfree)
+    this._view = new Uint32Array(this._handle, 0, 2)
   }
 
   _onalloc (size) {
@@ -34,6 +39,17 @@ module.exports = class Bitarray {
     const allocation = this._allocations[id]
 
     return allocation.subarray(binding.constants.PAGE_BITFIELD_OFFSET / 4 + 1)
+  }
+
+  * pages () {
+    const n = this._view[1] + 1
+    if (n === 2 ** 32) return
+
+    for (let i = 0; i < n; i++) {
+      const page = this.page(i)
+
+      if (page) yield [i, page]
+    }
   }
 
   insert (bitfield, start = 0) {
