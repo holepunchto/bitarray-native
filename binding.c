@@ -161,6 +161,43 @@ bitarray_native_destroy (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bitarray_native_page (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 2;
+  js_value_t *argv[2];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 2);
+
+  bitarray_native_t *bitarray;
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
+  assert(err == 0);
+
+  uint32_t i;
+  err = js_get_value_uint32(env, argv[1], &i);
+  assert(err == 0);
+
+  bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
+
+  uint32_t id = -1;
+
+  if (page) {
+    bitarray_native_allocation_t *allocation = (bitarray_native_allocation_t *) (((char *) page) - sizeof(bitarray_native_allocation_t));
+
+    id = allocation->id;
+  }
+
+  js_value_t *result;
+  err = js_create_int64(env, id, &result);
+  assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
 bitarray_native_insert (js_env_t *env, js_callback_info_t *info) {
   int err;
 
@@ -425,6 +462,7 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
 
   V("init", bitarray_native_init)
   V("destroy", bitarray_native_destroy)
+  V("page", bitarray_native_page)
   V("insert", bitarray_native_insert)
   V("clear", bitarray_native_clear)
   V("get", bitarray_native_get)
@@ -433,6 +471,25 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
   V("findFirst", bitarray_native_find_first)
   V("findLast", bitarray_native_find_last)
   V("count", bitarray_native_count)
+#undef V
+
+  js_value_t *constants;
+  err = js_create_object(env, &constants);
+  assert(err == 0);
+
+  err = js_set_named_property(env, exports, "constants", constants);
+  assert(err == 0);
+
+#define V(name, n) \
+  { \
+    js_value_t *val; \
+    err = js_create_uint32(env, n, &val); \
+    assert(err == 0); \
+    err = js_set_named_property(env, constants, name, val); \
+    assert(err == 0); \
+  }
+
+  V("PAGE_BITFIELD_OFFSET", offsetof(bitarray_page_t, bitfield))
 #undef V
 
   return exports;
