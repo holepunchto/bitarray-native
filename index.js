@@ -1,10 +1,6 @@
 const binding = require('./binding')
 
-exports.constants = {
-  BYTES_PER_PAGE: binding.constants.BYTES_PER_PAGE
-}
-
-module.exports = class Bitarray {
+module.exports = exports = class Bitarray {
   constructor () {
     this._allocations = []
     this._handle = binding.init(this, this._onalloc, this._onfree)
@@ -183,4 +179,8 @@ module.exports = class Bitarray {
 
     this._handle = null
   }
+}
+
+exports.constants = {
+  BYTES_PER_PAGE: binding.constants.BYTES_PER_PAGE
 }
