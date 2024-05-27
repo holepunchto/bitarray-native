@@ -3,7 +3,6 @@ const binding = require('./binding')
 module.exports = class Bitarray {
   constructor () {
     this._allocations = []
-
     this._handle = binding.init(this, this._onalloc, this._onfree)
   }
 

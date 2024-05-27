@@ -9,6 +9,37 @@ test('get and set', (t) => {
   t.is(b.get(100000), true)
 })
 
+test('random set and get', (t) => {
+  const b = new Bitarray()
+  const set = new Set()
+
+  for (let i = 0; i < 2000; i++) {
+    const idx = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+    b.set(idx, true)
+    set.add(idx)
+  }
+
+  for (let i = 0; i < 5000; i++) {
+    const idx = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+    const expected = set.has(idx)
+    const val = b.get(idx)
+    if (val !== expected) {
+      t.fail('expected ' + expected + ' but got ' + val + ' at ' + idx)
+      return
+    }
+  }
+
+  for (const idx of set) {
+    const val = b.get(idx)
+    if (val !== true) {
+      t.fail('expected true but got ' + val + ' at ' + idx)
+      return
+    }
+  }
+
+  t.pass()
+})
+
 test('count', (t) => {
   const b = new Bitarray()
 
