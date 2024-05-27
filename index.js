@@ -22,6 +22,30 @@ module.exports = class Bitarray {
     }
   }
 
+  insert (bitfield, start = 0) {
+    if (typeof start !== 'number') {
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
+    }
+
+    if (start % 8 !== 0) {
+      throw new RangeError('`start` must be a multiple of 8')
+    }
+
+    binding.insert(this._handle, bitfield, start)
+  }
+
+  clear (bitfield, start = 0) {
+    if (typeof start !== 'number') {
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
+    }
+
+    if (start % 8 !== 0) {
+      throw new RangeError('`start` must be a multiple of 8')
+    }
+
+    binding.clear(this._handle, bitfield, start)
+  }
+
   get (bit) {
     if (typeof bit !== 'number') {
       throw new TypeError(`\`bit\` must be a number, received type ${typeof bit} (${bit})`)
