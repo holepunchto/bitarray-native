@@ -80,7 +80,7 @@ module.exports = exports = class Bitarray {
     return binding.get(this._handle, bit)
   }
 
-  set (bit, value) {
+  set (bit, value = true) {
     if (typeof bit !== 'number') {
       throw new TypeError(`\`bit\` must be a number, received type ${typeof bit} (${bit})`)
     }
@@ -92,7 +92,11 @@ module.exports = exports = class Bitarray {
     return binding.set(this._handle, bit, value)
   }
 
-  fill (value, start, end) {
+  unset (bit) {
+    return this.set(bit, false)
+  }
+
+  fill (value, start = 0, end = -1) {
     if (typeof value !== 'boolean') {
       throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
@@ -148,7 +152,7 @@ module.exports = exports = class Bitarray {
     return this.findLast(false, pos)
   }
 
-  count (value, start, end) {
+  count (value, start = 0, end = -1) {
     if (typeof value !== 'boolean') {
       throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
