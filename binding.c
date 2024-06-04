@@ -161,6 +161,23 @@ bitarray_native_destroy (js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
+static int64_t
+bitarray_native_page_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, uint32_t i) {
+  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+
+  bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
+
+  int64_t id = -1;
+
+  if (page) {
+    bitarray_native_allocation_t *allocation = (bitarray_native_allocation_t *) (((char *) page) - sizeof(bitarray_native_allocation_t));
+
+    id = allocation->id;
+  }
+
+  return id;
+}
+
 static js_value_t *
 bitarray_native_page (js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -358,6 +375,13 @@ bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
+static int64_t
+bitarray_native_find_first_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t pos) {
+  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+
+  return bitarray_find_first(&bitarray->handle, value, pos);
+}
+
 static js_value_t *
 bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -389,6 +413,13 @@ bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
   return result;
 }
 
+static int64_t
+bitarray_native_find_last_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t pos) {
+  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+
+  return bitarray_find_last(&bitarray->handle, value, pos);
+}
+
 static js_value_t *
 bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -418,6 +449,13 @@ bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
   assert(err == 0);
 
   return result;
+}
+
+static int64_t
+bitarray_native_count_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t start, int64_t end) {
+  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+
+  return bitarray_count(&bitarray->handle, value, start, end);
 }
 
 static js_value_t *
@@ -474,7 +512,34 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
 
   V("init", bitarray_native_init, NULL)
   V("destroy", bitarray_native_destroy, NULL)
-  V("page", bitarray_native_page, NULL)
+
+  {
+    js_ffi_type_info_t *return_info;
+    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
+    assert(err == 0);
+
+    js_ffi_type_info_t *arg_info[3];
+
+    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_uint32, &arg_info[2]);
+    assert(err == 0);
+
+    js_ffi_function_info_t *function_info;
+    err = js_ffi_create_function_info(return_info, arg_info, 3, &function_info);
+    assert(err == 0);
+
+    js_ffi_function_t *ffi;
+    err = js_ffi_create_function(bitarray_native_page_fast, function_info, &ffi);
+    assert(err == 0);
+
+    V("page", bitarray_native_page, ffi)
+  }
+
   V("insert", bitarray_native_insert, NULL)
   V("clear", bitarray_native_clear, NULL)
 
@@ -507,9 +572,99 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
 
   V("set", bitarray_native_set, NULL)
   V("fill", bitarray_native_fill, NULL)
-  V("findFirst", bitarray_native_find_first, NULL)
-  V("findLast", bitarray_native_find_last, NULL)
-  V("count", bitarray_native_count, NULL)
+
+  {
+    js_ffi_type_info_t *return_info;
+    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
+    assert(err == 0);
+
+    js_ffi_type_info_t *arg_info[4];
+
+    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
+    assert(err == 0);
+
+    js_ffi_function_info_t *function_info;
+    err = js_ffi_create_function_info(return_info, arg_info, 4, &function_info);
+    assert(err == 0);
+
+    js_ffi_function_t *ffi;
+    err = js_ffi_create_function(bitarray_native_find_first_fast, function_info, &ffi);
+    assert(err == 0);
+
+    V("findFirst", bitarray_native_find_first, ffi)
+  }
+
+  {
+    js_ffi_type_info_t *return_info;
+    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
+    assert(err == 0);
+
+    js_ffi_type_info_t *arg_info[4];
+
+    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
+    assert(err == 0);
+
+    js_ffi_function_info_t *function_info;
+    err = js_ffi_create_function_info(return_info, arg_info, 4, &function_info);
+    assert(err == 0);
+
+    js_ffi_function_t *ffi;
+    err = js_ffi_create_function(bitarray_native_find_last_fast, function_info, &ffi);
+    assert(err == 0);
+
+    V("findLast", bitarray_native_find_last, ffi)
+  }
+
+  {
+    js_ffi_type_info_t *return_info;
+    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
+    assert(err == 0);
+
+    js_ffi_type_info_t *arg_info[5];
+
+    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
+    assert(err == 0);
+
+    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[4]);
+    assert(err == 0);
+
+    js_ffi_function_info_t *function_info;
+    err = js_ffi_create_function_info(return_info, arg_info, 5, &function_info);
+    assert(err == 0);
+
+    js_ffi_function_t *ffi;
+    err = js_ffi_create_function(bitarray_native_count_fast, function_info, &ffi);
+    assert(err == 0);
+
+    V("count", bitarray_native_count, ffi)
+  }
 #undef V
 
   js_value_t *constants;
