@@ -89,6 +89,8 @@ module.exports = exports = class Bitarray {
       throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
+    if (this.get(bit) === value) return false
+
     return binding.set(this._handle, bit, value)
   }
 
