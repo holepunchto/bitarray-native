@@ -3,7 +3,7 @@ const binding = require('./binding')
 module.exports = exports = class Bitarray {
   constructor () {
     this._allocations = []
-    this._handle = binding.init(this, this._onalloc, this._onfree)
+    this._handle = Buffer.from(binding.init(this, this._onalloc, this._onfree))
     this._view = new Uint32Array(this._handle, 0, 2)
   }
 
