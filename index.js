@@ -94,8 +94,24 @@ module.exports = exports = class Bitarray {
     return binding.set(this._handle, bit, value)
   }
 
+  setBatch (bits, value = true) {
+    if (!Array.isArray(bits)) {
+      throw new TypeError(`\`bits\` must be an array, received type ${typeof bits} (${bits})`)
+    }
+
+    if (typeof value !== 'boolean') {
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
+    }
+
+    return binding.setBatch(this._handle, bits, value)
+  }
+
   unset (bit) {
     return this.set(bit, false)
+  }
+
+  unsetBatch (bits) {
+    return this.setBatch(bits, false)
   }
 
   fill (value, start = 0, end = -1) {

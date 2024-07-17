@@ -343,6 +343,51 @@ bitarray_native_set (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
+bitarray_native_set_batch (js_env_t *env, js_callback_info_t *info) {
+  int err;
+
+  size_t argc = 3;
+  js_value_t *argv[3];
+
+  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
+  assert(err == 0);
+
+  assert(argc == 3);
+
+  bitarray_native_t *bitarray;
+  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  assert(err == 0);
+
+  uint32_t len;
+  err = js_get_array_length(env, argv[1], &len);
+  assert(err == 0);
+
+  bool value;
+  err = js_get_value_bool(env, argv[2], &value);
+  assert(err == 0);
+
+  bool changed = false;
+
+  for (uint32_t i = 0, n = len; i < n; i++) {
+    js_value_t *element;
+    err = js_get_element(env, argv[1], i, &element);
+    assert(err == 0);
+
+    int64_t bit;
+    err = js_get_value_int64(env, element, &bit);
+    assert(err == 0);
+
+    changed = bitarray_set(&bitarray->handle, bit, value) || changed;
+  }
+
+  js_value_t *result;
+  err = js_get_boolean(env, changed, &result);
+  assert(err == 0);
+
+  return result;
+}
+
+static js_value_t *
 bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
   int err;
 
@@ -571,6 +616,7 @@ bitarray_native_exports (js_env_t *env, js_value_t *exports) {
   }
 
   V("set", bitarray_native_set, NULL)
+  V("setBatch", bitarray_native_set_batch, NULL)
   V("fill", bitarray_native_fill, NULL)
 
   {

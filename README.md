@@ -34,7 +34,11 @@ b.get(1234)
 
 #### `bitarray.set(bit[, value])`
 
+#### `bitarray.setBatch(bits[, value])`
+
 #### `bitarray.unset(bit)`
+
+#### `bitarray.unsetBatch(bits)`
 
 #### `bitarray.fill(value[, start[, end]])`
 
