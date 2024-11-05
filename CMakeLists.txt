@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(bitarray_native C)
+find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
+find_package(cmake-napi REQUIRED PATHS node_modules/cmake-napi)
+find_package(cmake-npm REQUIRED PATHS node_modules/cmake-npm)
 
-include(bare)
-include(napi)
+project(bitarray_native C)
 
 if(NOT TARGET bitarray)
   add_subdirectory(vendor/libbitarray EXCLUDE_FROM_ALL)
@@ -19,19 +20,19 @@ target_sources(
 
 target_link_libraries(
   ${bitarray_native_bare}
+  PRIVATE
+    $<TARGET_OBJECTS:bitarray>
+    $<TARGET_OBJECTS:intrusive>
+    $<TARGET_OBJECTS:quickbit>
+    $<TARGET_OBJECTS:simdle>
   PUBLIC
-    bitarray_static
+    bitarray
+    intrusive
+    quickbit
+    simdle
 )
 
 add_napi_module(bitarray_native_node)
-
-bare_include_directories(compat NAPI)
-
-target_include_directories(
-  ${bitarray_native_node}
-  PRIVATE
-    ${compat}
-)
 
 target_sources(
   ${bitarray_native_node}
@@ -41,6 +42,22 @@ target_sources(
 
 target_link_libraries(
   ${bitarray_native_node}
+  PRIVATE
+    $<TARGET_OBJECTS:bitarray>
+    $<TARGET_OBJECTS:intrusive>
+    $<TARGET_OBJECTS:quickbit>
+    $<TARGET_OBJECTS:simdle>
   PUBLIC
-    bitarray_static
+    bitarray
+    intrusive
+    quickbit
+    simdle
+)
+
+resolve_node_module(bare-compat-napi compat)
+
+target_include_directories(
+  ${bitarray_native_node}
+  PRIVATE
+    "${compat}/include"
 )
