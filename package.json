@@ -11,8 +11,7 @@
     "binding.c",
     "binding.js",
     "CMakeLists.txt",
-    "prebuilds",
-    "vendor/libbitarray"
+    "prebuilds"
   ],
   "addon": true,
   "scripts": {
