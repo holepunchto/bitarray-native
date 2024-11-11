@@ -1,14 +1,13 @@
 cmake_minimum_required(VERSION 3.25)
 
 find_package(cmake-bare REQUIRED PATHS node_modules/cmake-bare)
+find_package(cmake-fetch REQUIRED PATHS node_modules/cmake-fetch)
 find_package(cmake-napi REQUIRED PATHS node_modules/cmake-napi)
 find_package(cmake-npm REQUIRED PATHS node_modules/cmake-npm)
 
 project(bitarray_native C)
 
-if(NOT TARGET bitarray)
-  add_subdirectory(vendor/libbitarray EXCLUDE_FROM_ALL)
-endif()
+fetch_package("github:holepunchto/libbitarray#74d3ef3")
 
 add_bare_module(bitarray_native_bare)
 
