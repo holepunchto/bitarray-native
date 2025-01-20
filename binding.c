@@ -2,7 +2,6 @@
 #include <bare.h>
 #include <bitarray.h>
 #include <js.h>
-#include <js/ffi.h>
 #include <stdint.h>
 
 typedef struct {
@@ -162,8 +161,18 @@ bitarray_native_destroy (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_page_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, uint32_t i) {
-  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+bitarray_native_page_typed (js_value_t *receiver, js_value_t *handle, uint32_t i, js_typed_callback_info_t *info) {
+  int err;
+
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
 
   bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
 
@@ -174,6 +183,9 @@ bitarray_native_page_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *han
 
     id = allocation->id;
   }
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
 
   return id;
 }
@@ -278,10 +290,25 @@ bitarray_native_clear (js_env_t *env, js_callback_info_t *info) {
 }
 
 static bool
-bitarray_native_get_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, int64_t bit) {
-  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+bitarray_native_get_typed (js_value_t *receiver, js_value_t *handle, int64_t bit, js_typed_callback_info_t *info) {
+  int err;
 
-  return bitarray_get(&bitarray->handle, bit);
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  bool result = bitarray_get(&bitarray->handle, bit);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
+
+  return result;
 }
 
 static js_value_t *
@@ -421,10 +448,25 @@ bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_find_first_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t pos) {
-  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+bitarray_native_find_first_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
+  int err;
 
-  return bitarray_find_first(&bitarray->handle, value, pos);
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  int64_t result = bitarray_find_first(&bitarray->handle, value, pos);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
+
+  return result;
 }
 
 static js_value_t *
@@ -459,10 +501,25 @@ bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_find_last_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t pos) {
-  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+bitarray_native_find_last_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
+  int err;
 
-  return bitarray_find_last(&bitarray->handle, value, pos);
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  int64_t result = bitarray_find_last(&bitarray->handle, value, pos);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
+
+  return result;
 }
 
 static js_value_t *
@@ -497,10 +554,25 @@ bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_count_fast (js_ffi_receiver_t *receiver, js_ffi_typedarray_t *handle, bool value, int64_t start, int64_t end) {
-  bitarray_native_t *bitarray = (bitarray_native_t *) handle->data.u8;
+bitarray_native_count_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t start, int64_t end, js_typed_callback_info_t *info) {
+  int err;
 
-  return bitarray_count(&bitarray->handle, value, start, end);
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  int64_t result = bitarray_count(&bitarray->handle, value, start, end);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
+
+  return result;
 }
 
 static js_value_t *
@@ -542,175 +614,113 @@ static js_value_t *
 bitarray_native_exports (js_env_t *env, js_value_t *exports) {
   int err;
 
-#define V(name, fn, ffi) \
+#define V(name, untyped, signature, typed) \
   { \
     js_value_t *val; \
-    if (ffi) { \
-      err = js_create_function_with_ffi(env, name, -1, fn, NULL, ffi, &val); \
+    if (signature) { \
+      err = js_create_typed_function(env, name, -1, untyped, signature, typed, NULL, &val); \
+      assert(err == 0); \
     } else { \
-      err = js_create_function(env, name, -1, fn, NULL, &val); \
+      err = js_create_function(env, name, -1, untyped, NULL, &val); \
+      assert(err == 0); \
     } \
-    assert(err == 0); \
     err = js_set_named_property(env, exports, name, val); \
     assert(err == 0); \
   }
 
-  V("init", bitarray_native_init, NULL)
-  V("destroy", bitarray_native_destroy, NULL)
+  V("init", bitarray_native_init, NULL, NULL)
+  V("destroy", bitarray_native_destroy, NULL, NULL)
 
-  {
-    js_ffi_type_info_t *return_info;
-    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
-    assert(err == 0);
+  V(
+    "page",
+    bitarray_native_page,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_int64,
+      .args_len = 3,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_uint32,
+      }
+    }),
+    bitarray_native_page_typed
+  )
 
-    js_ffi_type_info_t *arg_info[3];
+  V("insert", bitarray_native_insert, NULL, NULL)
+  V("clear", bitarray_native_clear, NULL, NULL)
 
-    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
-    assert(err == 0);
+  V(
+    "get",
+    bitarray_native_get,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_boolean,
+      .args_len = 3,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_int64,
+      }
+    }),
+    bitarray_native_get_typed
+  )
 
-    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
-    assert(err == 0);
+  V("set", bitarray_native_set, NULL, NULL)
+  V("setBatch", bitarray_native_set_batch, NULL, NULL)
+  V("fill", bitarray_native_fill, NULL, NULL)
 
-    err = js_ffi_create_type_info(js_ffi_uint32, &arg_info[2]);
-    assert(err == 0);
+  V(
+    "findFirst",
+    bitarray_native_find_first,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_int64,
+      .args_len = 4,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_boolean,
+        js_int64,
+      }
+    }),
+    bitarray_native_find_first_typed
+  )
 
-    js_ffi_function_info_t *function_info;
-    err = js_ffi_create_function_info(return_info, arg_info, 3, &function_info);
-    assert(err == 0);
+  V(
+    "findLast",
+    bitarray_native_find_last,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_int64,
+      .args_len = 4,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_boolean,
+        js_int64,
+      }
+    }),
+    bitarray_native_find_last_typed
+  )
 
-    js_ffi_function_t *ffi;
-    err = js_ffi_create_function(bitarray_native_page_fast, function_info, &ffi);
-    assert(err == 0);
-
-    V("page", bitarray_native_page, ffi)
-  }
-
-  V("insert", bitarray_native_insert, NULL)
-  V("clear", bitarray_native_clear, NULL)
-
-  {
-    js_ffi_type_info_t *return_info;
-    err = js_ffi_create_type_info(js_ffi_bool, &return_info);
-    assert(err == 0);
-
-    js_ffi_type_info_t *arg_info[3];
-
-    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[2]);
-    assert(err == 0);
-
-    js_ffi_function_info_t *function_info;
-    err = js_ffi_create_function_info(return_info, arg_info, 3, &function_info);
-    assert(err == 0);
-
-    js_ffi_function_t *ffi;
-    err = js_ffi_create_function(bitarray_native_get_fast, function_info, &ffi);
-    assert(err == 0);
-
-    V("get", bitarray_native_get, ffi)
-  }
-
-  V("set", bitarray_native_set, NULL)
-  V("setBatch", bitarray_native_set_batch, NULL)
-  V("fill", bitarray_native_fill, NULL)
-
-  {
-    js_ffi_type_info_t *return_info;
-    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
-    assert(err == 0);
-
-    js_ffi_type_info_t *arg_info[4];
-
-    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
-    assert(err == 0);
-
-    js_ffi_function_info_t *function_info;
-    err = js_ffi_create_function_info(return_info, arg_info, 4, &function_info);
-    assert(err == 0);
-
-    js_ffi_function_t *ffi;
-    err = js_ffi_create_function(bitarray_native_find_first_fast, function_info, &ffi);
-    assert(err == 0);
-
-    V("findFirst", bitarray_native_find_first, ffi)
-  }
-
-  {
-    js_ffi_type_info_t *return_info;
-    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
-    assert(err == 0);
-
-    js_ffi_type_info_t *arg_info[4];
-
-    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
-    assert(err == 0);
-
-    js_ffi_function_info_t *function_info;
-    err = js_ffi_create_function_info(return_info, arg_info, 4, &function_info);
-    assert(err == 0);
-
-    js_ffi_function_t *ffi;
-    err = js_ffi_create_function(bitarray_native_find_last_fast, function_info, &ffi);
-    assert(err == 0);
-
-    V("findLast", bitarray_native_find_last, ffi)
-  }
-
-  {
-    js_ffi_type_info_t *return_info;
-    err = js_ffi_create_type_info(js_ffi_int64, &return_info);
-    assert(err == 0);
-
-    js_ffi_type_info_t *arg_info[5];
-
-    err = js_ffi_create_type_info(js_ffi_receiver, &arg_info[0]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_uint8array, &arg_info[1]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_bool, &arg_info[2]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[3]);
-    assert(err == 0);
-
-    err = js_ffi_create_type_info(js_ffi_int64, &arg_info[4]);
-    assert(err == 0);
-
-    js_ffi_function_info_t *function_info;
-    err = js_ffi_create_function_info(return_info, arg_info, 5, &function_info);
-    assert(err == 0);
-
-    js_ffi_function_t *ffi;
-    err = js_ffi_create_function(bitarray_native_count_fast, function_info, &ffi);
-    assert(err == 0);
-
-    V("count", bitarray_native_count, ffi)
-  }
+  V(
+    "count",
+    bitarray_native_count,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_int64,
+      .args_len = 5,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_boolean,
+        js_int64,
+        js_int64,
+      }
+    }),
+    bitarray_native_count_typed
+  )
 #undef V
 
   js_value_t *constants;

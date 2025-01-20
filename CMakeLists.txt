@@ -7,7 +7,7 @@ find_package(cmake-npm REQUIRED PATHS node_modules/cmake-npm)
 
 project(bitarray_native C)
 
-fetch_package("github:holepunchto/libbitarray#74d3ef3")
+fetch_package("github:holepunchto/libbitarray#7a6443b")
 
 add_bare_module(bitarray_native_bare)
 
@@ -21,12 +21,10 @@ target_link_libraries(
   ${bitarray_native_bare}
   PRIVATE
     $<TARGET_OBJECTS:bitarray>
-    $<TARGET_OBJECTS:intrusive>
     $<TARGET_OBJECTS:quickbit>
     $<TARGET_OBJECTS:simdle>
   PUBLIC
     bitarray
-    intrusive
     quickbit
     simdle
 )
@@ -43,12 +41,10 @@ target_link_libraries(
   ${bitarray_native_node}
   PRIVATE
     $<TARGET_OBJECTS:bitarray>
-    $<TARGET_OBJECTS:intrusive>
     $<TARGET_OBJECTS:quickbit>
     $<TARGET_OBJECTS:simdle>
   PUBLIC
     bitarray
-    intrusive
     quickbit
     simdle
 )
