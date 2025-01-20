@@ -18,7 +18,7 @@ typedef struct {
 } bitarray_native_allocation_t;
 
 static void *
-bitarray_native__on_alloc (size_t size, bitarray_t *handle) {
+bitarray_native__on_alloc(size_t size, bitarray_t *handle) {
   int err;
 
   bitarray_native_t *bitarray = (bitarray_native_t *) handle->data;
@@ -61,7 +61,7 @@ bitarray_native__on_alloc (size_t size, bitarray_t *handle) {
 }
 
 static void
-bitarray_native__on_free (void *ptr, bitarray_t *handle) {
+bitarray_native__on_free(void *ptr, bitarray_t *handle) {
   int err;
 
   bitarray_native_t *bitarray = (bitarray_native_t *) handle->data;
@@ -95,7 +95,7 @@ bitarray_native__on_free (void *ptr, bitarray_t *handle) {
 }
 
 static js_value_t *
-bitarray_native_init (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_init(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -131,7 +131,7 @@ bitarray_native_init (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_destroy (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_destroy(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 1;
@@ -161,7 +161,7 @@ bitarray_native_destroy (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_page_typed (js_value_t *receiver, js_value_t *handle, uint32_t i, js_typed_callback_info_t *info) {
+bitarray_native_page_typed(js_value_t *receiver, js_value_t *handle, uint32_t i, js_typed_callback_info_t *info) {
   int err;
 
   js_env_t *env;
@@ -191,7 +191,7 @@ bitarray_native_page_typed (js_value_t *receiver, js_value_t *handle, uint32_t i
 }
 
 static js_value_t *
-bitarray_native_page (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_page(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 2;
@@ -228,7 +228,7 @@ bitarray_native_page (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_insert (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_insert(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -259,7 +259,7 @@ bitarray_native_insert (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_clear (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_clear(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -290,7 +290,7 @@ bitarray_native_clear (js_env_t *env, js_callback_info_t *info) {
 }
 
 static bool
-bitarray_native_get_typed (js_value_t *receiver, js_value_t *handle, int64_t bit, js_typed_callback_info_t *info) {
+bitarray_native_get_typed(js_value_t *receiver, js_value_t *handle, int64_t bit, js_typed_callback_info_t *info) {
   int err;
 
   js_env_t *env;
@@ -312,7 +312,7 @@ bitarray_native_get_typed (js_value_t *receiver, js_value_t *handle, int64_t bit
 }
 
 static js_value_t *
-bitarray_native_get (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_get(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 2;
@@ -339,7 +339,7 @@ bitarray_native_get (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_set (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_set(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -370,7 +370,7 @@ bitarray_native_set (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_set_batch (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_set_batch(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -415,7 +415,7 @@ bitarray_native_set_batch (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_fill(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 4;
@@ -448,7 +448,7 @@ bitarray_native_fill (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_find_first_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
+bitarray_native_find_first_typed(js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
   int err;
 
   js_env_t *env;
@@ -470,7 +470,7 @@ bitarray_native_find_first_typed (js_value_t *receiver, js_value_t *handle, bool
 }
 
 static js_value_t *
-bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_find_first(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -501,7 +501,7 @@ bitarray_native_find_first (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_find_last_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
+bitarray_native_find_last_typed(js_value_t *receiver, js_value_t *handle, bool value, int64_t pos, js_typed_callback_info_t *info) {
   int err;
 
   js_env_t *env;
@@ -523,7 +523,7 @@ bitarray_native_find_last_typed (js_value_t *receiver, js_value_t *handle, bool 
 }
 
 static js_value_t *
-bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_find_last(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 3;
@@ -554,7 +554,7 @@ bitarray_native_find_last (js_env_t *env, js_callback_info_t *info) {
 }
 
 static int64_t
-bitarray_native_count_typed (js_value_t *receiver, js_value_t *handle, bool value, int64_t start, int64_t end, js_typed_callback_info_t *info) {
+bitarray_native_count_typed(js_value_t *receiver, js_value_t *handle, bool value, int64_t start, int64_t end, js_typed_callback_info_t *info) {
   int err;
 
   js_env_t *env;
@@ -576,7 +576,7 @@ bitarray_native_count_typed (js_value_t *receiver, js_value_t *handle, bool valu
 }
 
 static js_value_t *
-bitarray_native_count (js_env_t *env, js_callback_info_t *info) {
+bitarray_native_count(js_env_t *env, js_callback_info_t *info) {
   int err;
 
   size_t argc = 4;
@@ -611,7 +611,7 @@ bitarray_native_count (js_env_t *env, js_callback_info_t *info) {
 }
 
 static js_value_t *
-bitarray_native_exports (js_env_t *env, js_value_t *exports) {
+bitarray_native_exports(js_env_t *env, js_value_t *exports) {
   int err;
 
 #define V(name, untyped, signature, typed) \
