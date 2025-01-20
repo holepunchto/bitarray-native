@@ -338,6 +338,28 @@ bitarray_native_get(js_env_t *env, js_callback_info_t *info) {
   return result;
 }
 
+static bool
+bitarray_native_set_typed(js_value_t *receiver, js_value_t *handle, int64_t bit, bool value, js_typed_callback_info_t *info) {
+  int err;
+
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  bool result = bitarray_set(&bitarray->handle, bit, value);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
+
+  return result;
+}
+
 static js_value_t *
 bitarray_native_set(js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -412,6 +434,26 @@ bitarray_native_set_batch(js_env_t *env, js_callback_info_t *info) {
   assert(err == 0);
 
   return result;
+}
+
+static void
+bitarray_native_fill_typed(js_value_t *receiver, js_value_t *handle, bool value, int64_t start, int64_t end, js_typed_callback_info_t *info) {
+  int err;
+
+  js_env_t *env;
+  err = js_get_typed_callback_info(info, &env, NULL);
+  assert(err == 0);
+
+  bitarray_native_t *bitarray;
+
+  js_typedarray_view_t *view;
+  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  assert(err == 0);
+
+  bitarray_fill(&bitarray->handle, value, start, end);
+
+  err = js_release_typedarray_view(env, view);
+  assert(err == 0);
 }
 
 static js_value_t *
@@ -666,9 +708,42 @@ bitarray_native_exports(js_env_t *env, js_value_t *exports) {
     bitarray_native_get_typed
   )
 
-  V("set", bitarray_native_set, NULL, NULL)
+  V(
+    "set",
+    bitarray_native_set,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_boolean,
+      .args_len = 4,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_int64,
+        js_boolean,
+      }
+    }),
+    bitarray_native_set_typed
+  )
+
   V("setBatch", bitarray_native_set_batch, NULL, NULL)
-  V("fill", bitarray_native_fill, NULL, NULL)
+
+  V(
+    "fill",
+    bitarray_native_fill,
+    &((js_callback_signature_t) {
+      .version = 0,
+      .result = js_undefined,
+      .args_len = 5,
+      .args = (int[]) {
+        js_object,
+        js_object,
+        js_boolean,
+        js_int64,
+        js_int64,
+      }
+    }),
+    bitarray_native_fill_typed
+  )
 
   V(
     "findFirst",
