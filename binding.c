@@ -179,7 +179,7 @@ bitarray_native_destroy(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 1);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   bitarray_destroy(&bitarray->handle);
@@ -209,7 +209,7 @@ bitarray_native_page(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   uint32_t index;
@@ -238,7 +238,7 @@ bitarray_native_insert(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   uint8_t *bitfield;
@@ -269,7 +269,7 @@ bitarray_native_clear(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   uint8_t *bitfield;
@@ -296,15 +296,10 @@ bitarray_native_get_typed(js_value_t *receiver, js_value_t *handle, int64_t bit,
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
   bool result = bitarray_get(&bitarray->handle, bit);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
 
   return result;
 }
@@ -322,7 +317,7 @@ bitarray_native_get(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 2);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   int64_t bit;
@@ -345,17 +340,10 @@ bitarray_native_set_typed(js_value_t *receiver, js_value_t *handle, int64_t bit,
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
-  bool result = bitarray_set(&bitarray->handle, bit, value);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
-
-  return result;
+  return bitarray_set(&bitarray->handle, bit, value);
 }
 
 static js_value_t *
@@ -371,7 +359,7 @@ bitarray_native_set(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   int64_t bit;
@@ -402,7 +390,7 @@ bitarray_native_set_batch(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   uint32_t len;
@@ -443,15 +431,10 @@ bitarray_native_fill_typed(js_value_t *receiver, js_value_t *handle, bool value,
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
   bitarray_fill(&bitarray->handle, value, start, end);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
 }
 
 static js_value_t *
@@ -467,7 +450,7 @@ bitarray_native_fill(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 4);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   bool value;
@@ -496,17 +479,10 @@ bitarray_native_find_first_typed(js_value_t *receiver, js_value_t *handle, bool 
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
-  int64_t result = bitarray_find_first(&bitarray->handle, value, pos);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
-
-  return result;
+  return bitarray_find_first(&bitarray->handle, value, pos);
 }
 
 static js_value_t *
@@ -522,7 +498,7 @@ bitarray_native_find_first(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   bool value;
@@ -549,17 +525,10 @@ bitarray_native_find_last_typed(js_value_t *receiver, js_value_t *handle, bool v
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
-  int64_t result = bitarray_find_last(&bitarray->handle, value, pos);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
-
-  return result;
+  return bitarray_find_last(&bitarray->handle, value, pos);
 }
 
 static js_value_t *
@@ -575,7 +544,7 @@ bitarray_native_find_last(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 3);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   bool value;
@@ -602,17 +571,10 @@ bitarray_native_count_typed(js_value_t *receiver, js_value_t *handle, bool value
   assert(err == 0);
 
   bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
+  err = js_get_arraybuffer_info(env, handle, (void **) &bitarray, NULL);
   assert(err == 0);
 
-  int64_t result = bitarray_count(&bitarray->handle, value, start, end);
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
-
-  return result;
+  return bitarray_count(&bitarray->handle, value, start, end);
 }
 
 static js_value_t *
@@ -628,7 +590,7 @@ bitarray_native_count(js_env_t *env, js_callback_info_t *info) {
   assert(argc == 4);
 
   bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
+  err = js_get_arraybuffer_info(env, argv[0], (void **) &bitarray, NULL);
   assert(err == 0);
 
   bool value;

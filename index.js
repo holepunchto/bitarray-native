@@ -5,8 +5,11 @@ module.exports = exports = class Bitarray {
   constructor() {
     this._allocations = []
     this._pages = new BigSparseArray()
-    this._handle = Buffer.from(
-      binding.init(this, this._onalloc, this._onfree, this._onrelease)
+    this._handle = binding.init(
+      this,
+      this._onalloc,
+      this._onfree,
+      this._onrelease
     )
   }
 
