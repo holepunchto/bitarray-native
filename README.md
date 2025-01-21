@@ -16,6 +16,8 @@ const b = new Bitarray()
 b.set(1234, true)
 b.get(1234)
 // true
+
+b.destroy()
 ```
 
 ## API
