@@ -1,10 +1,13 @@
+const BigSparseArray = require('big-sparse-array')
 const binding = require('./binding')
 
 module.exports = exports = class Bitarray {
   constructor() {
     this._allocations = []
-    this._handle = Buffer.from(binding.init(this, this._onalloc, this._onfree))
-    this._view = new Uint32Array(this._handle, 0, 2)
+    this._pages = new BigSparseArray()
+    this._handle = Buffer.from(
+      binding.init(this, this._onalloc, this._onfree, this._onrelease)
+    )
   }
 
   _onalloc(size) {
@@ -21,6 +24,28 @@ module.exports = exports = class Bitarray {
     if (last[0] !== id) {
       this._allocations[(last[0] = id)] = last
     }
+  }
+
+  _onrelease(index) {
+    this._pages.set(index)
+  }
+
+  page(index, bitfield) {
+    if (typeof index !== 'number') {
+      throw new TypeError(
+        `\`index\` must be a number, received type ${typeof index} (${index})`
+      )
+    }
+
+    if (bitfield.byteLength !== binding.constants.BYTES_PER_PAGE) {
+      throw new RangeError(
+        '`bitfield` must be ${binding.constants.BYTES_PER_PAGE} bytes'
+      )
+    }
+
+    binding.page(this._handle, index, bitfield)
+
+    this._pages.set(index, bitfield)
   }
 
   insert(bitfield, start = 0) {

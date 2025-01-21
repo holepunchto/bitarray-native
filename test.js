@@ -1,6 +1,8 @@
 const test = require('brittle')
 const Bitarray = require('.')
 
+const { constants } = Bitarray
+
 test('get and set', (t) => {
   const b = new Bitarray()
 
@@ -209,4 +211,15 @@ test('find last, ones around segment boundary', (t) => {
   b.set(2097152, true)
   t.is(b.findLast(false, 2097152), 2097150)
   t.is(b.findLast(false, 2097153), 2097153)
+})
+
+test('external page', (t) => {
+  const b = new Bitarray()
+
+  const page = Buffer.alloc(constants.BYTES_PER_PAGE)
+
+  b.page(0, page)
+  b.set(0, true)
+
+  t.is(page[0], 0x1)
 })

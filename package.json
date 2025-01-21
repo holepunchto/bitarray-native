@@ -34,6 +34,7 @@
     "bare": ">=1.13.0"
   },
   "dependencies": {
+    "big-sparse-array": "^1.0.3",
     "require-addon": "^1.0.2"
   },
   "devDependencies": {
