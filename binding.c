@@ -272,16 +272,16 @@ bitarray_native_clear(js_env_t *env, js_callback_info_t *info) {
   err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
   assert(err == 0);
 
-  uint8_t *data;
+  uint8_t *bitfield;
   size_t len;
-  err = js_get_typedarray_info(env, argv[1], NULL, (void **) &data, (size_t *) &len, NULL, NULL);
+  err = js_get_typedarray_info(env, argv[1], NULL, (void **) &bitfield, (size_t *) &len, NULL, NULL);
   assert(err == 0);
 
   int64_t start;
   err = js_get_value_int64(env, argv[2], &start);
   assert(err == 0);
 
-  err = bitarray_clear(&bitarray->handle, data, len, start);
+  err = bitarray_clear(&bitarray->handle, bitfield, len, start);
   assert(err == 0);
 
   return NULL;
