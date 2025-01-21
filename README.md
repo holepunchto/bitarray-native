@@ -22,6 +22,8 @@ b.get(1234)
 
 #### `const bitarray = new Bitarray()`
 
+#### `bitarray.destroy()`
+
 #### `bitarray.page(index, bitfield)`
 
 #### `bitarray.insert(bitfield[, start])`

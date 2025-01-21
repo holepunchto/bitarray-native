@@ -5,6 +5,7 @@ const { constants } = Bitarray
 
 test('get and set', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   t.is(b.get(100000), false)
   t.is(b.set(100000, true), true)
@@ -13,6 +14,8 @@ test('get and set', (t) => {
 
 test('random set and get', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
+
   const set = new Set()
 
   for (let i = 0; i < 2000; i++) {
@@ -44,6 +47,7 @@ test('random set and get', (t) => {
 
 test('setBatch', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   t.is(b.setBatch([1, 4, 8], true), true)
   t.is(b.get(1), true)
@@ -53,6 +57,7 @@ test('setBatch', (t) => {
 
 test('count', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   for (const [start, length] of [
     [0, 2],
@@ -71,6 +76,7 @@ test('count', (t) => {
 
 test('find first, all zeroes', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   t.is(b.findFirst(false, 0), 0)
   t.is(b.findFirst(true, 0), -1)
@@ -94,6 +100,7 @@ test('find first, all zeroes', (t) => {
 
 test('find first, all ones', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   b.fill(true, 0, 2 ** 24)
 
@@ -121,6 +128,7 @@ test('find first, all ones', (t) => {
 
 test('find last, all zeroes', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   t.is(b.findLast(false, 0), 0)
   t.is(b.findLast(true, 0), -1)
@@ -144,6 +152,7 @@ test('find last, all zeroes', (t) => {
 
 test('find last, all ones', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   b.fill(true, 0, 2 ** 24)
 
@@ -171,6 +180,7 @@ test('find last, all ones', (t) => {
 
 test('find first, ones around page boundary', function (t) {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   b.set(32766, true)
   t.is(b.findFirst(false, 32766), 32767)
@@ -182,6 +192,7 @@ test('find first, ones around page boundary', function (t) {
 
 test('find first, ones around segment boundary', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   b.set(2097150, true)
   t.is(b.findFirst(false, 2097150), 2097151)
@@ -193,6 +204,7 @@ test('find first, ones around segment boundary', (t) => {
 
 test('find last, ones around page boundary', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   b.set(32767, true)
   t.is(b.findLast(false, 32767), 32766)
@@ -215,6 +227,7 @@ test('find last, ones around segment boundary', (t) => {
 
 test('external page', (t) => {
   const b = new Bitarray()
+  t.teardown(() => b.destroy())
 
   const page = Buffer.alloc(constants.BYTES_PER_PAGE)
 

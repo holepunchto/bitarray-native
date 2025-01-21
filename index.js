@@ -30,6 +30,14 @@ module.exports = exports = class Bitarray {
     this._pages.set(index)
   }
 
+  destroy() {
+    if (this._handle === null) return
+
+    binding.destroy(this._handle)
+
+    this._handle = null
+  }
+
   page(index, bitfield) {
     if (typeof index !== 'number') {
       throw new TypeError(
