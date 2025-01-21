@@ -7,7 +7,8 @@ find_package(cmake-npm REQUIRED PATHS node_modules/cmake-npm)
 
 project(bitarray_native C)
 
-fetch_package("github:holepunchto/libbitarray#7a6443b")
+fetch_package("github:holepunchto/libbitarray#cc4b3eb")
+fetch_package("github:holepunchto/libquickbit#9e92d1c")
 
 add_bare_module(bitarray_native_bare)
 

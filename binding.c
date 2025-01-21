@@ -160,73 +160,6 @@ bitarray_native_destroy(js_env_t *env, js_callback_info_t *info) {
   return NULL;
 }
 
-static int64_t
-bitarray_native_page_typed(js_value_t *receiver, js_value_t *handle, uint32_t i, js_typed_callback_info_t *info) {
-  int err;
-
-  js_env_t *env;
-  err = js_get_typed_callback_info(info, &env, NULL);
-  assert(err == 0);
-
-  bitarray_native_t *bitarray;
-
-  js_typedarray_view_t *view;
-  err = js_get_typedarray_view(env, handle, NULL, (void **) &bitarray, NULL, &view);
-  assert(err == 0);
-
-  bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
-
-  int64_t id = -1;
-
-  if (page) {
-    bitarray_native_allocation_t *allocation = (bitarray_native_allocation_t *) (((char *) page) - sizeof(bitarray_native_allocation_t));
-
-    id = allocation->id;
-  }
-
-  err = js_release_typedarray_view(env, view);
-  assert(err == 0);
-
-  return id;
-}
-
-static js_value_t *
-bitarray_native_page(js_env_t *env, js_callback_info_t *info) {
-  int err;
-
-  size_t argc = 2;
-  js_value_t *argv[2];
-
-  err = js_get_callback_info(env, info, &argc, argv, NULL, NULL);
-  assert(err == 0);
-
-  assert(argc == 2);
-
-  bitarray_native_t *bitarray;
-  err = js_get_typedarray_info(env, argv[0], NULL, (void **) &bitarray, NULL, NULL, NULL);
-  assert(err == 0);
-
-  uint32_t i;
-  err = js_get_value_uint32(env, argv[1], &i);
-  assert(err == 0);
-
-  bitarray_page_t *page = bitarray_page(&bitarray->handle, i);
-
-  int64_t id = -1;
-
-  if (page) {
-    bitarray_native_allocation_t *allocation = (bitarray_native_allocation_t *) (((char *) page) - sizeof(bitarray_native_allocation_t));
-
-    id = allocation->id;
-  }
-
-  js_value_t *result;
-  err = js_create_int64(env, id, &result);
-  assert(err == 0);
-
-  return result;
-}
-
 static js_value_t *
 bitarray_native_insert(js_env_t *env, js_callback_info_t *info) {
   int err;
@@ -673,22 +606,6 @@ bitarray_native_exports(js_env_t *env, js_value_t *exports) {
   V("init", bitarray_native_init, NULL, NULL)
   V("destroy", bitarray_native_destroy, NULL, NULL)
 
-  V(
-    "page",
-    bitarray_native_page,
-    &((js_callback_signature_t) {
-      .version = 0,
-      .result = js_int64,
-      .args_len = 3,
-      .args = (int[]) {
-        js_object,
-        js_object,
-        js_uint32,
-      }
-    }),
-    bitarray_native_page_typed
-  )
-
   V("insert", bitarray_native_insert, NULL, NULL)
   V("clear", bitarray_native_clear, NULL, NULL)
 
@@ -815,8 +732,6 @@ bitarray_native_exports(js_env_t *env, js_value_t *exports) {
   }
 
   V("BYTES_PER_PAGE", BITARRAY_BYTES_PER_PAGE)
-
-  V("PAGE_BITFIELD_OFFSET", offsetof(bitarray_page_t, bitfield))
 #undef V
 
   return exports;

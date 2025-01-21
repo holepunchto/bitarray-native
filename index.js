@@ -23,33 +23,6 @@ module.exports = exports = class Bitarray {
     }
   }
 
-  page(i) {
-    if (typeof i !== 'number') {
-      throw new TypeError(
-        `\`i\` must be a number, received type ${typeof i} (${i})`
-      )
-    }
-
-    const id = binding.page(this._handle, i)
-
-    if (id < 0) return null
-
-    const allocation = this._allocations[id]
-
-    return allocation.subarray(binding.constants.PAGE_BITFIELD_OFFSET / 4 + 1)
-  }
-
-  *pages() {
-    const n = this._view[1] + 1
-    if (n === 2 ** 32) return
-
-    for (let i = 0; i < n; i++) {
-      const page = this.page(i)
-
-      if (page) yield [i, page]
-    }
-  }
-
   insert(bitfield, start = 0) {
     if (typeof start !== 'number') {
       throw new TypeError(
