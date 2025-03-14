@@ -403,10 +403,15 @@ bitarray_native_set_batch(js_env_t *env, js_callback_info_t *info) {
 
   bool changed = false;
 
+  js_value_t **elements = malloc(len * sizeof(js_value_t *));
+
+  uint32_t fetched;
+  err = js_get_array_elements(env, argv[1], elements, len, 0, &fetched);
+  assert(err == 0);
+  assert(fetched == len);
+
   for (uint32_t i = 0, n = len; i < n; i++) {
-    js_value_t *element;
-    err = js_get_element(env, argv[1], i, &element);
-    assert(err == 0);
+    js_value_t *element = elements[i];
 
     int64_t bit;
     err = js_get_value_int64(env, element, &bit);
@@ -414,6 +419,8 @@ bitarray_native_set_batch(js_env_t *env, js_callback_info_t *info) {
 
     changed = bitarray_set(&bitarray->handle, bit, value) || changed;
   }
+
+  free(elements);
 
   js_value_t *result;
   err = js_get_boolean(env, changed, &result);
