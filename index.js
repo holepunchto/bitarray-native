@@ -5,12 +5,7 @@ module.exports = exports = class Bitarray {
   constructor() {
     this._allocations = []
     this._pages = new BigSparseArray()
-    this._handle = binding.init(
-      this,
-      this._onalloc,
-      this._onfree,
-      this._onrelease
-    )
+    this._handle = binding.init(this, this._onalloc, this._onfree, this._onrelease)
   }
 
   _onalloc(size) {
@@ -43,15 +38,11 @@ module.exports = exports = class Bitarray {
 
   page(index, bitfield) {
     if (typeof index !== 'number') {
-      throw new TypeError(
-        `\`index\` must be a number, received type ${typeof index} (${index})`
-      )
+      throw new TypeError(`\`index\` must be a number, received type ${typeof index} (${index})`)
     }
 
     if (bitfield.byteLength !== binding.constants.BYTES_PER_PAGE) {
-      throw new RangeError(
-        '`bitfield` must be ${binding.constants.BYTES_PER_PAGE} bytes'
-      )
+      throw new RangeError('`bitfield` must be ${binding.constants.BYTES_PER_PAGE} bytes')
     }
 
     binding.page(this._handle, index, bitfield)
@@ -61,9 +52,7 @@ module.exports = exports = class Bitarray {
 
   insert(bitfield, start = 0) {
     if (typeof start !== 'number') {
-      throw new TypeError(
-        `\`start\` must be a number, received type ${typeof start} (${start})`
-      )
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
     }
 
     if (start % 8 !== 0) {
@@ -75,9 +64,7 @@ module.exports = exports = class Bitarray {
 
   clear(bitfield, start = 0) {
     if (typeof start !== 'number') {
-      throw new TypeError(
-        `\`start\` must be a number, received type ${typeof start} (${start})`
-      )
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
     }
 
     if (start % 8 !== 0) {
@@ -89,9 +76,7 @@ module.exports = exports = class Bitarray {
 
   get(bit) {
     if (typeof bit !== 'number') {
-      throw new TypeError(
-        `\`bit\` must be a number, received type ${typeof bit} (${bit})`
-      )
+      throw new TypeError(`\`bit\` must be a number, received type ${typeof bit} (${bit})`)
     }
 
     return binding.get(this._handle, bit)
@@ -99,15 +84,11 @@ module.exports = exports = class Bitarray {
 
   set(bit, value = true) {
     if (typeof bit !== 'number') {
-      throw new TypeError(
-        `\`bit\` must be a number, received type ${typeof bit} (${bit})`
-      )
+      throw new TypeError(`\`bit\` must be a number, received type ${typeof bit} (${bit})`)
     }
 
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     if (this.get(bit) === value) return false
@@ -117,15 +98,11 @@ module.exports = exports = class Bitarray {
 
   setBatch(bits, value = true) {
     if (!Array.isArray(bits)) {
-      throw new TypeError(
-        `\`bits\` must be an array, received type ${typeof bits} (${bits})`
-      )
+      throw new TypeError(`\`bits\` must be an array, received type ${typeof bits} (${bits})`)
     }
 
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     return binding.setBatch(this._handle, bits, value)
@@ -141,21 +118,15 @@ module.exports = exports = class Bitarray {
 
   fill(value, start = 0, end = -1) {
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     if (typeof start !== 'number') {
-      throw new TypeError(
-        `\`start\` must be a number, received type ${typeof start} (${start})`
-      )
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
     }
 
     if (typeof end !== 'number') {
-      throw new TypeError(
-        `\`end\` must be a number, received type ${typeof end} (${end})`
-      )
+      throw new TypeError(`\`end\` must be a number, received type ${typeof end} (${end})`)
     }
 
     binding.fill(this._handle, value, start, end)
@@ -163,15 +134,11 @@ module.exports = exports = class Bitarray {
 
   findFirst(value, pos = 0) {
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     if (typeof pos !== 'number') {
-      throw new TypeError(
-        `\`pos\` must be a number, received type ${typeof pos} (${pos})`
-      )
+      throw new TypeError(`\`pos\` must be a number, received type ${typeof pos} (${pos})`)
     }
 
     return binding.findFirst(this._handle, value, pos)
@@ -187,15 +154,11 @@ module.exports = exports = class Bitarray {
 
   findLast(value, pos = -1) {
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     if (typeof pos !== 'number') {
-      throw new TypeError(
-        `\`pos\` must be a number, received type ${typeof pos} (${pos})`
-      )
+      throw new TypeError(`\`pos\` must be a number, received type ${typeof pos} (${pos})`)
     }
 
     return binding.findLast(this._handle, value, pos)
@@ -211,21 +174,15 @@ module.exports = exports = class Bitarray {
 
   count(value, start = 0, end = -1) {
     if (typeof value !== 'boolean') {
-      throw new TypeError(
-        `\`value\` must be a boolean, received type ${typeof value} (${value})`
-      )
+      throw new TypeError(`\`value\` must be a boolean, received type ${typeof value} (${value})`)
     }
 
     if (typeof start !== 'number') {
-      throw new TypeError(
-        `\`start\` must be a number, received type ${typeof start} (${start})`
-      )
+      throw new TypeError(`\`start\` must be a number, received type ${typeof start} (${start})`)
     }
 
     if (typeof end !== 'number') {
-      throw new TypeError(
-        `\`end\` must be a number, received type ${typeof end} (${end})`
-      )
+      throw new TypeError(`\`end\` must be a number, received type ${typeof end} (${end})`)
     }
 
     return binding.count(this._handle, value, start, end)
